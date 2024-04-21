@@ -280,7 +280,7 @@ class MainScreen(BoxLayout):
         self.field_sunday_added = False
         self.extra_fields = []
         
-        self.tipo_escala_button = CustomSpinnerButton(text='Tipo de Escala',font_size='15sp', options=["Atendente 1 e 2", "Farmacêutico(a)", "Supervisor(a) manhã", "Supervisor(a) noite", "Gerente"])                                
+        self.tipo_escala_button = CustomSpinnerButton(text='Tipo de Escala',font_size='15sp', options=["Atendente 1 e 2", "Farmacêutico(a)", "Supervisor(a) manhã", "Supervisor(a) noite", "Gerente"])
         self.add_widget(self.tipo_escala_button)
 
         self.nome_button = CustomSpinnerButton(text='Nome',font_size='15sp', options=["Brenda", "Bruno", "Douglas", "Evandro", "Felipe", "Giovana", "João", "Luan", "Marlene", "Ricardo"])
@@ -299,9 +299,11 @@ class MainScreen(BoxLayout):
         self.submit_button = Button(text='Gerar Datas de Folga',font_size='20sp', on_press=self.submit_action)
         self.add_widget(self.submit_button)
 
+    def update_tipo_escala(self, tipo_escala):
+        self.tipo_escala_atual = tipo_escala
 
     def check_for_extra_date_field(self):
-    # Remova todos os campos extras existentes primeiro
+        # Remova todos os campos extras existentes primeiro
         self.remove_extra_fields()
         
         if self.proxima_folga_input.text:
@@ -310,21 +312,15 @@ class MainScreen(BoxLayout):
                 tipo_escala_atual = self.tipo_escala_button.text
                 
                 # Verifica se precisa adicionar campos baseados na nova escala e data
-                if tipo_escala_atual == "Supervisor(a) manhã" and proxima_folga.weekday() == 1 and not self.field_tuesday_added:
+                if tipo_escala_atual == "Supervisor(a) manhã" and proxima_folga.weekday() == 1:
                     self.add_previous_tuesday_field()
-                    self.field_tuesday_added = True  # Atualiza o flag
-                elif tipo_escala_atual == "Atendente 1 e 2" and proxima_folga.weekday() == 6 and not self.field_sunday_added:
+                elif tipo_escala_atual == "Atendente 1 e 2" and proxima_folga.weekday() == 6:
                     self.add_previous_sunday_field()
-                    self.field_sunday_added = True  # Atualiza o flag
             except ValueError:
                 pass  # Tratar erro de data inválida se necessário
 
-    def update_tipo_escala(self, tipo_escala):
-        self.tipo_escala_atual = tipo_escala
-        self.reset_state()  # Garante que o estado seja resetado toda vez que o tipo de escala mudar
-
     def reset_state(self):
-        # Reset completo do estado dos campos extras
+        # Remova todos os campos extras quando resetar o estado
         self.remove_extra_fields()
         self.field_tuesday_added = False
         self.field_sunday_added = False
@@ -361,6 +357,8 @@ class MainScreen(BoxLayout):
             self.remove_widget(field)
         self.extra_fields.clear()
         self.field_sunday_added = False
+
+
 
     def submit_action(self, instance):
         start_date_str = self.data_atual_input.text
