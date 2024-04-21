@@ -12,6 +12,7 @@ from kivy.properties import ListProperty
 from kivy.utils import platform
 from kivy.metrics import dp, sp
 import locale
+from kivy.uix.scrollview import ScrollView
 
 size = dp(100)  # 100 dp (densidade independente de pixels)
 font_size = sp(20)  # 20 sp (escala independente de pixels para fontes)
@@ -218,7 +219,6 @@ def generate_supervisor2_days(start_date, end_date, next_off_day):
 
     return off_days
 
-from kivy.uix.scrollview import ScrollView
 
 class GridDropDown(ModalView):
     def __init__(self, button_ref, options, **kwargs):
